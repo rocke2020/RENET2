@@ -14,8 +14,7 @@ from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampl
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, precision_recall_fscore_support, roc_auc_score
 from sklearn.model_selection import KFold
-
-
+from util.log_util import logger
 
 from pprint import pprint
 from timeit import default_timer as timer
@@ -848,6 +847,7 @@ def eval(model, the_dataloader, args, pre_f = 'dev'):
         
             #feature_x = feature_x.to(device=args.device, non_blocking=True)
             #labels_1 = labels.to(device=args.device, non_blocking=True)
+            logger.debug(f'args.device {args.device}')
             feature_x = feature_x.to(device=args.device)
             labels_1 = labels.to(device=args.device)
 #             lengths = lengths.to(device=args.device, non_blocking=True)
@@ -1067,5 +1067,3 @@ def init_model_optimizer(model, config, patience_epochs = 1):
 #     scheduler = None
     
     return optimizer, scheduler
-
-

@@ -14,6 +14,8 @@ data/pmc/
 data/raw_data/abs/
 data/raw_data/ft/
 data/test_data/
+data/ann_table/
+data/ft_info/
 models/
 tools/geniass/
 data/ft_gda/

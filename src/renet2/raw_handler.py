@@ -8,7 +8,7 @@ import numpy as np
 import torch
 from pathlib import Path
 
-from renet2.raw import load_documents, load_documents_ori
+from .raw import load_documents, load_documents_ori
 from sklearn.model_selection import train_test_split
 #from tokenizers import BertWordPieceTokenizer
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler, \

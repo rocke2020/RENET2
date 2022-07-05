@@ -21,10 +21,14 @@ from sklearn.metrics import f1_score, precision_recall_fscore_support, roc_auc_s
 from sklearn.model_selection import KFold
 
 # from tqdm import tqdm|
+import os, sys
+sys.path.append(os.path.abspath('.'))
+from src.renet2.raw import load_documents, load_documents_batch
+from src.renet2.raw_handler import *
+from src.renet2.model import *
+from util.log_util import logger
 
-from renet2.raw import load_documents, load_documents_batch
-from renet2.raw_handler import *
-from renet2.model import *
+
 
 _G_eval_time = 0
 
@@ -79,12 +83,12 @@ def renet2_evaluate(args, _read_batch_idx=0, loaded_feature=None):
         args.l2_weight_decay = config.l2_weight_decay
         model.update_model_config(config)
 
-        if torch.cuda.device_count() > 1:
+        if args.use_cuda and torch.cuda.device_count() > 1:
             #print("use", torch.cuda.device_count(), "GPUs!")
             model = nn.DataParallel(model)
-    
+        logger.debug(f'args.device {args.device}')
         model.to(args.device)
-            
+        
         pred_l, tru_l, S, pred_o = eval(model, dataloader_ft_sub, args, 'test')
         if not args.no_cuda:
             free_cuda()
@@ -358,6 +362,7 @@ def main():
 
     args.no_cuda = not args.use_cuda
     use_cuda = torch.cuda.is_available() and not args.no_cuda
+    logger.debug(f'use_cuda {use_cuda}')
     device = torch.device('cuda' if use_cuda else 'cpu')
     if use_cuda:
         if torch.cuda.device_count() > 1:
@@ -369,6 +374,7 @@ def main():
     if use_cuda:
         torch.cuda.manual_seed(args.seed)
     set_seed(args)
+    args.use_cuda = use_cuda
     args.device = device
     print('using device', device)
 
